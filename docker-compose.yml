@@ -19,7 +19,7 @@ services:
         order: start-first
 
   db:
-    image: mysql:8.0
+    image: mariadb:10.6
     environment:
       MYSQL_ROOT_PASSWORD: Dts@1234
       MYSQL_DATABASE: lab_db
