@@ -34,3 +34,4 @@ services:
 
 volumes:
   db_data:
+# Ép CI/CD chay lai de nhan Port 82
