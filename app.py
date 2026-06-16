@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Nhận thông tin cấu hình DB từ môi trường (do Docker Swarm truyền vào)
 DB_HOST = os.environ.get('DB_HOST', 'db')
 DB_USER = os.environ.get('DB_USER', 'root')
-DB_PASS = os.environ.get('DB_PASS', 'Vanda@123')
+DB_PASS = os.environ.get('DB_PASS', 'Dts@1234')
 DB_NAME = os.environ.get('DB_NAME', 'lab_db')
 
 def get_db_connection():
