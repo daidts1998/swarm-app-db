@@ -1,0 +1,35 @@
+name: Deploy App+DB to Swarm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted 
+
+    steps:
+    - name: 1. Lay ma nguon tu GitHub
+      uses: actions/checkout@v4
+
+    - name: 2. Dang nhap Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: vandaj98
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: 3. Build Image App va Push len Docker Hub
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: |
+          vandaj98/python-swarm-app:${{ github.sha }}
+          vandaj98/python-swarm-app:latest
+
+    - name: 4. Deploy Stack to Docker Swarm
+      run: |
+        # Truyền mã SHA của GitHub vào làm TAG để Swarm luôn cập nhật bản code mới nhất
+        export IMAGE_TAG=${{ github.sha }}
+        docker stack deploy --with-registry-auth -c docker-compose.yml enterprise_stack

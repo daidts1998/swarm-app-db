@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  web:
+    # Lấy image từ Docker Hub của bạn (sẽ được CI/CD tự động thay tag)
+    image: vandaj98/python-swarm-app:${IMAGE_TAG:-latest}
+    ports:
+      - "80:5000"
+    environment:
+      # Khai báo để App biết đường tìm sang service db
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=Dts@1234
+      - DB_NAME=lab_db
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        order: start-first
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: Dts@1234
+      MYSQL_DATABASE: lab_db
+    volumes:
+      # Mount ổ cứng lưu trữ để dữ liệu không bị mất khi container khởi động lại
+      - db_data:/var/lib/mysql
+    deploy:
+      placement:
+        # Ép Database chỉ được phép chạy trên node master để quản lý phân vùng ổ cứng cố định
+        constraints:
+          - node.role == manager
+
+volumes:
+  db_data:
